@@ -3,7 +3,6 @@ package com.mahar.notificationapp;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,27 +12,48 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     private Button button;
+    public final String CHANNEL_ID="1";
+    int counter=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         button=findViewById(R.id.button);
 
-        Calendar calendar=Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY,15);
-        calendar.set(Calendar.MINUTE,25);
-        calendar.set(Calendar.SECOND,0);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                counter++;
+                button.setText(""+counter);
+                if(counter==5){
+                    startNotification();
+                }
+            }
+        });
 
-        Intent i=new Intent(getApplicationContext(),Notification_Receiver.class);
-        PendingIntent pendingIntent=PendingIntent.getBroadcast(getApplicationContext(),100,i
-        ,PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+    public void startNotification(){
+        Intent i=new Intent(this,MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,i,0);
 
-        AlarmManager alarmManager=(AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis()
-        ,AlarmManager.INTERVAL_FIFTEEN_MINUTES,pendingIntent);
+        NotificationChannel channel= new NotificationChannel(CHANNEL_ID,"1"
+                , NotificationManager.IMPORTANCE_DEFAULT);
+
+        NotificationManager manager=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        manager.createNotificationChannel(channel);
+
+        Notification.Builder builder= new Notification.Builder(MainActivity.this,CHANNEL_ID);
+        builder.setSmallIcon(R.drawable.ic_notif)
+                .setContentTitle("Judul Notification")
+                .setContentText("Text Notification")
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+//                .setPriority(Notification.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat compat=NotificationManagerCompat.from(MainActivity.this);
+        compat.notify(1,builder.build());
     }
 }
