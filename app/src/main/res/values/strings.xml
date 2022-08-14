@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Periodic Notification</string>
+    <string name="app_name">local Notification</string>
+    <string name="big_text">Belajar sedikit demi sedikit, tetapi rutin.
+        Penelitian membuktikan bahwa siswa yang rutin belajar setiap hari
+        lebih mungkin mencapai sasarannya.Luangkan waktu untuk belajar
+        dan dapatkan pengingat menggunakan penjadwal Anda.</string>
 </resources>
